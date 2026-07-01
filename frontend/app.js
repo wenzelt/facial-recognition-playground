@@ -178,17 +178,22 @@ function startCaptureLoop() {
   if (state.captureTimer) return;
   state.isCapturing = true;
 
-  setTimeout(() => {
+  function tick() {
     if (!state.isCapturing) return;
-    captureAndDetect();
-    state.captureTimer = setInterval(captureAndDetect, 1200);
-  }, 200);
+    captureAndDetect().finally(() => {
+      if (state.isCapturing) {
+        state.captureTimer = setTimeout(tick, 1200);
+      }
+    });
+  }
+
+  state.captureTimer = setTimeout(tick, 200);
 }
 
 function stopCaptureLoop() {
   state.isCapturing = false;
   if (state.captureTimer) {
-    clearInterval(state.captureTimer);
+    clearTimeout(state.captureTimer);
     state.captureTimer = null;
   }
   algoCards.forEach((c) => c.classList.remove("loading"));
@@ -201,9 +206,7 @@ async function captureAndDetect() {
   const card = document.querySelector(`.algo-card[data-algo="${state.activeAlgorithm}"]`);
   if (card) card.classList.add("loading");
 
-  // Capture frame
-  captureCanvas.width = video.videoWidth;
-  captureCanvas.height = video.videoHeight;
+  // Capture frame (canvas already sized by syncCanvasSizes on startup)
   const ctx = captureCanvas.getContext("2d");
   ctx.drawImage(video, 0, 0);
   const imageData = captureCanvas.toDataURL("image/jpeg", 0.8);
