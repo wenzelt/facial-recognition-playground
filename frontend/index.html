@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Recognition Playground</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🧠 Face Recognition Playground</h1>
+    <p>Compare on-device face detection algorithms on your MacBook camera</p>
+  </header>
+
+  <main>
+    <!-- Left Column: Camera + Selector -->
+    <section class="left-col">
+      <!-- Camera with overlay canvas -->
+      <div class="camera-section">
+        <div class="camera-wrapper">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="overlay" class="overlay-canvas"></canvas>
+        </div>
+        <canvas id="capture-canvas" hidden></canvas>
+        <div class="camera-controls">
+          <button id="start-cam" class="btn primary">📷 Start Camera</button>
+          <span id="cam-status" class="status">Camera off</span>
+        </div>
+      </div>
+
+      <!-- Algorithm Cards -->
+      <div class="algo-grid" id="algo-grid">
+        <div class="algo-card" data-algo="haar">
+          <div class="algo-icon">🔲</div>
+          <div class="algo-name">Haar Cascade</div>
+          <div class="algo-desc">OpenCV — classical CV, very fast, less accurate</div>
+          <div class="algo-tag">fastest</div>
+        </div>
+        <div class="algo-card" data-algo="mediapipe_mesh">
+          <div class="algo-icon">👤</div>
+          <div class="algo-name">MediaPipe Face Mesh</div>
+          <div class="algo-desc">Google ML — 478 landmark points + bounding box</div>
+          <div class="algo-tag">landmarks</div>
+        </div>
+        <div class="algo-card" data-algo="hog">
+          <div class="algo-icon">😊</div>
+          <div class="algo-name">face_recognition (HOG)</div>
+          <div class="algo-desc">dlib HOG + SVM — classic, reliable</div>
+          <div class="algo-tag">reliable</div>
+        </div>
+        <div class="algo-card" data-algo="cnn">
+          <div class="algo-icon">👥</div>
+          <div class="algo-name">face_recognition (CNN)</div>
+          <div class="algo-desc">dlib CNN — most accurate, slower</div>
+          <div class="algo-tag">accurate</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Results -->
+    <section class="right-col">
+      <div class="results-panel" id="results-panel">
+        <h2>Results</h2>
+        <div id="results-empty" class="results-empty">
+          <p>👆 Select an algorithm above</p>
+        </div>
+        <div id="results-content" class="results-content" hidden>
+          <div class="result-row">
+            <span class="result-label">Algorithm</span>
+            <span class="result-value" id="r-algo">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Faces found</span>
+            <span class="result-value highlight" id="r-faces">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Detection time</span>
+            <span class="result-value" id="r-time">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Avg. confidence</span>
+            <span class="result-value" id="r-confidence">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Landmarks</span>
+            <span class="result-value" id="r-landmarks">—</span>
+          </div>
+          <div id="r-error" class="result-error" hidden></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>🔒 All processing is on-device. No data sent to the cloud.</p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
